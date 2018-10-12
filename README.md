@@ -1,2 +1,5 @@
-# rtvjs
-Runtime Verification JavaScript Library
+# RTV.js
+
+Runtime Verification Library for browsers and Node.js.
+
+The official repository is hosted at GitLab: https://gitlab.com/stefcameron/rtvjs
