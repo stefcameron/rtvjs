@@ -2,4 +2,4 @@
 
 Runtime Verification Library for browsers and Node.js.
 
-The official repository is hosted at GitLab: https://gitlab.com/stefcameron/rtvjs
+The official repository is hosted on GitLab: https://gitlab.com/stefcameron/rtvjs
