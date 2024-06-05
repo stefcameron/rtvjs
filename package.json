@@ -92,7 +92,7 @@
     "@rollup/plugin-commonjs": "^25.0.8",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-replace": "^5.0.5",
+    "@rollup/plugin-replace": "^5.0.6",
     "babel-plugin-istanbul": "^6.1.1",
     "chokidar": "^3.6.0",
     "eslint": "^8.57.0",
