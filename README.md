@@ -12,6 +12,8 @@ Give it a [test drive with RunKit](https://npm.runkit.com/rtvjs)!
 
 # Installation
 
+> ❗️ This library is ESM/CJS in Node, but __ESM-only in the browser__.
+
 ```bash
 npm install rtvjs
 ```
@@ -20,8 +22,8 @@ The package's `./dist` directory contains various types of builds:
 
 *   `./node/rtv[.dev].cjs`: CJS (not minified, primarily for use in Node)
 *   `./node/rtv[.slim][.dev].mjs`: ESM (not minified, primarily for use in Node)
-*   `./browser/rtv.esm[.slim][.dev].js`: ESM (not minified, for use by bundlers or for debugging; non-slim/self-contained versions are also good for browser debugging)
-*   `./browser/rtv.esm.min.js`: ESM (minified, primarily for use directly in the browser)
+*   `./browser/rtv.esm[.slim][.dev].js`: ESM (not minified, for use by bundlers; non-slim/self-contained Dev version is good for browser debugging as a counterpart to the minified Prod version)
+*   `./browser/rtv.esm.min.js`: ESM (minified, primarily for use directly in the browser in Prod)
 
 ## Dev
 
@@ -54,9 +56,12 @@ import { verify, STRING, ... } from 'rtvjs'; // selective imports only
 
 While a UMD build isn't provided, it's still possible to load the library as a global directly in the browser as follows:
 
+> ❗️ It's important to __specify the full path__ to the bundle you want to use. Neither one of the CDNs suggested below seem to understand `package.json:exports` in order to find the right file.
+
 ```html
 <script type="module">
-  import * as rtv from 'https://unpkg.com/rtvjs@5/dist/browser/rtv.esm.min.js';
+  import * as rtv from 'https://esm.sh/rtvjs@5/dist/browser/rtv.esm.min.js';
+  // OR: import * as rtv from 'https://unpkg.com/rtvjs@5/dist/browser/rtv.esm.min.js';
   window.rtv = rtv;
 </script>
 ```

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Date format is YYYY-MM-DD.
 
+## 5.0.0
+
+Release date: 2024-08-03
+
+No changes since [v5.0.0-beta.0](#500-beta0).
+
+> 🚨 Note this release contains __breaking__ changes.
+
 ## 5.0.0-beta.0
 
 Release date: 2024-08-03
