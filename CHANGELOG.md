@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Date format is YYYY-MM-DD.
 
-## UNRELEASED
+## 5.0.0-beta.0
+
+Release date: 2024-08-03
 
 There are no API additions/changes in this release. The focus is on ESM.
 
