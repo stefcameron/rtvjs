@@ -16,77 +16,49 @@ Give it a [test drive with RunKit](https://npm.runkit.com/rtvjs)!
 npm install rtvjs
 ```
 
-The package's `./dist` directory contains 3 types of builds:
+The package's `./dist` directory contains various types of builds:
 
-*   `rtv[.slim].js`: CJS (not minified, for use by bundlers)
-*   `rtv.esm[.slim].js`: ESM (not minified, for use by bundlers)
-*   `rtv.umd[.slim][.dev].js`: UMD (minified, for use in browsers, self-contained)
+*   `./node/rtv[.dev].cjs`: CJS (not minified, primarily for use in Node)
+*   `./node/rtv[.slim][.dev].mjs`: ESM (not minified, primarily for use in Node)
+*   `./browser/rtv.esm[.slim][.dev].js`: ESM (not minified, for use by bundlers or for debugging; non-slim/self-contained versions are also good for browser debugging)
+*   `./browser/rtv.esm.min.js`: ESM (minified, primarily for use directly in the browser)
 
-The CJS and ESM builds require defining the `process.env.NODE_ENV` to either `"development"` or `"production"`. The UMD 'dev' build is the equivalent of defining `process.env.NODE_ENV = "development"`.
+## Dev
+
+The `.dev` CJS and ESM builds include dev-only features such as deprecation warnings and more helpful console logs.
 
 ## Slim
 
 These builds are smaller in size to optimize on download time and bundling efficiency.
 
-The `.slim` CJS and ESM builds depend on [@babel/runtime](https://babeljs.io/docs/en/babel-runtime) and [lodash](https://lodash.com/) external dependencies. You will need to install those packages in addition to `rtvjs`.
-
-> See the [package.json](./package.json)'s `devDependencies` to know what versions of those dependencies are required when using slim builds.
-
-The `.slim` UMD builds only depend on [lodash](https://lodash.com/) being defined as the `_` global:
-
-```html
-<script src="https://unpkg.com/lodash"></script>
-<script src="./dist/rtv.umd.slim.js"></script>
-```
+The `.slim` CJS and ESM builds depend on [@babel/runtime](https://babeljs.io/docs/en/babel-runtime) and [lodash-es](https://lodash-es.com/) external dependencies, both of which should automatically get installed when you install `rtvjs`.
 
 ## CJS
 
-The CJS build can be used like this, typically in Node.js, or with a bundler like Webpack or Rollup:
+The CJS build can be used like this in a Node.js script:
 
 ```javascript
 const rtv = require('rtvjs');
 ```
 
-Be sure to set `process.env.NODE_ENV = "development"` if you want to enable the dev code it contains (e.g. deprecation warnings). To exclude the dev code, set `process.env.NODE_ENV = "production"` (or any value other than `"development"`).
-
-Use the [Webpack Define Plugin](https://webpack.js.org/plugins/define-plugin/) or the [Rollup Replace Plugin](https://www.npmjs.com/package/@rollup/plugin-replace), for example, to configure this in your build.
-
 ## ESM
 
-The ESM build can be used like this (note a default export is not provided):
+The ESM build can be used like this either in Node.js, a bundler, or the browser (note a default export is not provided):
 
 ```javascript
 import * as rtv from 'rtvjs'; // import all into an `rtv` namespace
 import { verify, STRING, ... } from 'rtvjs'; // selective imports only
 ```
 
-> The CJS considerations above also apply to this build (externals and environment).
+### ESM in browser
 
-## UMD
-
-The UMD build comes in two files:
-
--   `./dist/rtv.umd[.slim].dev.js`: For development. Non-minified, and includes dev code such as deprecation warnings (if any).
--   `./dist/rtv.umd[.slim].js`: For production. Minified, and excludes any dev code.
--   `.slim` depends on `_` as the `lodash` global in both cases.
-
-Use it like this:
-
-```javascript
-// as a CommonJS module (e.g. Node.js)
-const rtvjs = require('./dist/rtv.umd.js'); // OR: `./dist/rtv.umd.dev.js`
-rtvjs.verify(...);
-
-// as an AMD module (e.g. RequireJS)
-define(['rtvjs'], function(rtvjs) {
-  rtvjs.verify(...);
-});
-```
+While a UMD build isn't provided, it's still possible to load the library as a global directly in the browser as follows:
 
 ```html
-<!-- as a global, when loaded via a <script> tag in HTML -->
-<script src="./dist/rtv.umd.js"></script>
-<script>rtvjs.verify(...)</script>
+<script type="module">
+  import * as rtv from 'https://unpkg.com/rtvjs@5/dist/browser/rtv.esm.min.js';
+  window.rtv = rtv;
+</script>
 ```
 
 > The __non-slim__ builds are self-contained and optimized for browsers.

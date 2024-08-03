@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import * as pqs from '../../src/lib/onlyQualifiers';
 import * as mod from '../../src/lib/qualifiers';

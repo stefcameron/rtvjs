@@ -3,11 +3,17 @@
   "version": "4.1.1",
   "description": "Runtime Verification Library for browsers and Node.js.",
   "engines": {
-    "node": ">=14.18.0",
+    "node": ">=16.12.0",
     "npm": ">=10.0.0"
   },
-  "main": "dist/rtv.js",
-  "module": "dist/rtv.esm.js",
+  "module": "dist/browser/rtv.esm.slim.js",
+  "exports": {
+    ".": {
+      "node": "./dist/node/rtv.cjs",
+      "import": "./dist/browser/rtv.esm.slim.js",
+      "default": "./dist/browser/rtv.esm.js"
+    }
+  },
   "sideEffects": false,
   "scripts": {
     "api": "jsdoc2md -f \"src/**/*.js\" -f \"src/**/*.jsdoc\" --heading-depth 1 > API.md",
@@ -29,9 +35,10 @@
     "lint": "eslint ./*.js \"src/**/*.{js,jsdoc}\" \"test/**/*.js\" \"tools/**/*.js\"",
     "html": "npm run build:lib && npm run html:live",
     "html:live": "live-server --no-browser --mount=\"/dist:./dist\" ./tools",
-    "node": "echo \"\n!!! REMEMBER TO REBUILD IF NECESSARY !!!\n\n\" && node -r ./tools/node.js --inspect",
+    "node": "echo \"\n⚠️ REMEMBER TO REBUILD IF NECESSARY ⚠️\n\n\" && node --import=./tools/node.mjs --inspect",
+    "node:cjs": "echo \"\n⚠️ REMEMBER TO REBUILD IF NECESSARY ⚠️\n\n\" && node -r ./tools/node.cjs --inspect",
     "node:build": "npm run build:lib && npm run node",
-    "node:internals": "npm run build:internals && node -r ./dist_tools/internals.js --inspect",
+    "node:internals": "npm run build:internals && node --import=./dist_tools/internals.mjs --inspect",
     "precommit:api": "git add API.md",
     "precommit:msg": "echo 'Running pre-commit checks...'",
     "prepare": "husky",
@@ -81,6 +88,10 @@
     "README.md",
     "dist/"
   ],
+  "peerDependencies": {
+    "@babel/runtime": "^7.24.5",
+    "lodash-es": "^4.17.21"
+  },
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/eslint-parser": "^7.25.1",
@@ -106,7 +117,7 @@
     "jest-transform-stub": "^2.0.0",
     "jsdoc-to-markdown": "^8.0.3",
     "live-server": "^1.2.2",
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "prettier": "^3.3.3",
     "rollup": "^4.19.1",
     "rollup-plugin-terser": "^7.0.2"

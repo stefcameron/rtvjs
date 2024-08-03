@@ -1,6 +1,6 @@
 ////// isWeakSet validation
 
-import { default as _isWeakSet } from 'lodash/isWeakSet';
+import { default as _isWeakSet } from 'lodash-es/isWeakSet.js';
 
 import { types } from '../types';
 

@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Date format is YYYY-MM-DD.
 
+## UNRELEASED
+
+There are no API additions/changes in this release. The focus is on ESM.
+
+### 🚨 BREAKING
+
+- ESM-only for the browser: UMD and CJS browser builds have been removed (see [ESM in browser](./README.md#esm-in-browser) for an example of how to import this directly into the browser as a global).
+- ESM and CJS for Node, with `.cjs` (`require()`) and `.mjs` (`import`) builds.
+- Library now uses/depends (as a peer) on `lodash-es` (ESM) instead of `lodash` (CJS).
+- When importing the library (e.g. `import * as rtv from 'rtvjs'`), it will import from the __slim__ build by default
+    - The assumption is it's being imported for use in an app/library that will provide the necessary externals in its build/package rather than import from the self-contained build and cause duplication of its dependencies (and possibly conflicts at runtime).
+- File structure under the published `./dist` directory has changed: Files are now split between `node` and `browser` directories.
+- See [Installation](./README.md#installation) for information on which files are meant to be used where. Some previous formats are no longer available.
+- The `main` field in `package.json` has been removed in favor of `exports`.
+- Minimum supported version of Node is `v16.12.0` (for ESM support).
+
+### Added
+
+- Minified version of the ESM build for use in browsers.
+
+### Changed
+
+- `@babel/runtime` and `lodash-es` are now `peerDependencies` since they are required for the `slim` builds.
+
 ## 4.1.1
 
 Release date: 2024-02-17

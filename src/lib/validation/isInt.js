@@ -1,6 +1,6 @@
 ////// isInt validation
 
-import { default as _isInteger } from 'lodash/isInteger';
+import { default as _isInteger } from 'lodash-es/isInteger.js';
 
 import { types } from '../types';
 

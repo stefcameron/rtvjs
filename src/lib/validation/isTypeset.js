@@ -1,6 +1,6 @@
 ////// isTypeset validation module
 
-import { default as _forEach } from 'lodash/forEach';
+import { default as _forEach } from 'lodash-es/forEach.js';
 
 import { check as isArray } from './isArray';
 import { check as isShape } from './isShape';

@@ -3,6 +3,7 @@
 const jsonPlugin = require('@rollup/plugin-json');
 const { nodeResolve: resolvePlugin } = require('@rollup/plugin-node-resolve');
 const cjsPlugin = require('@rollup/plugin-commonjs');
+const replacePlugin = require('@rollup/plugin-replace');
 
 const LIB_NAME = 'internals';
 
@@ -11,12 +12,16 @@ const config = {
   output: [
     // CJS Module build
     {
-      file: `dist_tools/${LIB_NAME}.js`,
-      format: 'cjs',
-      sourcemap: true,
+      file: `dist_tools/${LIB_NAME}.mjs`,
+      format: 'esm',
+      sourcemap: false,
     },
   ],
   plugins: [
+    replacePlugin({
+      values: {}, // none for now
+      preventAssignment: true,
+    }),
     jsonPlugin(),
     resolvePlugin(),
     cjsPlugin({

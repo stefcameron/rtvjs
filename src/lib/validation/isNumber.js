@@ -1,6 +1,6 @@
 ////// isNumber validation
 
-import { default as _isNaN } from 'lodash/isNaN';
+import { default as _isNaN } from 'lodash-es/isNaN.js';
 
 import { types } from '../types';
 

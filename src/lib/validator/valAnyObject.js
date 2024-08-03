@@ -1,7 +1,7 @@
 ////// valAnyObject validator
 
-import _forEach from 'lodash/forEach';
-import _difference from 'lodash/difference';
+import _forEach from 'lodash-es/forEach.js';
+import _difference from 'lodash-es/difference.js';
 
 import { type, check as isAnyObject } from '../validation/isAnyObject';
 

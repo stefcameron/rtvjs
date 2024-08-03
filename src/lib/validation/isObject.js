@@ -1,6 +1,6 @@
 ////// isObject validation
 
-import { default as _isObjectLike } from 'lodash/isObjectLike';
+import { default as _isObjectLike } from 'lodash-es/isObjectLike.js';
 
 import { check as isArray } from './isArray';
 import { check as isMap } from './isMap';
