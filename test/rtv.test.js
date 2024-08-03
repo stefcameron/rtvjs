@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import * as rtv from '../src/rtv';
 import { types } from '../src/lib/types';

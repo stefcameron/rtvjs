@@ -1,6 +1,6 @@
 ////// isFalsy validation module
 
-import { default as _isNaN } from 'lodash/isNaN';
+import { default as _isNaN } from 'lodash-es/isNaN.js';
 
 /**
  * Validation Module: isFalsy

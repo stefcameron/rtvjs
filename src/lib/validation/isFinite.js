@@ -1,6 +1,6 @@
 ////// isFinite validation
 
-import { default as _isFinite } from 'lodash/isFinite';
+import { default as _isFinite } from 'lodash-es/isFinite.js';
 
 import { types } from '../types';
 

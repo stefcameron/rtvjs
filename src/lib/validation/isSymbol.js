@@ -1,6 +1,6 @@
 ////// isSymbol validation
 
-import { default as _isSymbol } from 'lodash/isSymbol';
+import { default as _isSymbol } from 'lodash-es/isSymbol.js';
 
 import { types } from '../types';
 

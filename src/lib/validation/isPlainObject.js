@@ -1,6 +1,6 @@
 ////// isPlainObject validation
 
-import { default as _isPlainObject } from 'lodash/isPlainObject';
+import { default as _isPlainObject } from 'lodash-es/isPlainObject.js';
 
 import { types } from '../types';
 

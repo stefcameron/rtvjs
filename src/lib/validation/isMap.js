@@ -1,6 +1,6 @@
 ////// isMap validation
 
-import { default as _isMap } from 'lodash/isMap';
+import { default as _isMap } from 'lodash-es/isMap.js';
 
 import { types } from '../types';
 

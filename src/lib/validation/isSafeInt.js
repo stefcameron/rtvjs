@@ -1,6 +1,6 @@
 ////// isSafeInt validation
 
-import { default as _isSafeInteger } from 'lodash/isSafeInteger';
+import { default as _isSafeInteger } from 'lodash-es/isSafeInteger.js';
 
 import { types } from '../types';
 

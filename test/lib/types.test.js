@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import * as pts from '../../src/lib/onlyTypes';
 import * as mod from '../../src/lib/types';

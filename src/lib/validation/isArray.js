@@ -1,6 +1,6 @@
 ////// isArray validation
 
-import { default as _isArray } from 'lodash/isArray';
+import { default as _isArray } from 'lodash-es/isArray.js';
 
 import { types } from '../types';
 

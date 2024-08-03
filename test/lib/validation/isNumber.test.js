@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import '../../../src/rtv'; // make sure all validators we might use in typesets get configured
 import * as vtu from '../validationTestUtil';

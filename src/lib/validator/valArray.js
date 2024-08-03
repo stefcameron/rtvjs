@@ -1,6 +1,6 @@
 ////// valArray validator
 
-import { default as _forEach } from 'lodash/forEach';
+import { default as _forEach } from 'lodash-es/forEach.js';
 
 import { type, check as isArray } from '../validation/isArray';
 

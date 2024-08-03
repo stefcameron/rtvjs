@@ -28,15 +28,20 @@ const addProcessHandlers = function (cmd, onClose = closeHandler) {
   cmd.on('close', onClose);
 };
 
-if (!pkg.main) {
+if (
+  !pkg.exports?.['.'] ||
+  !pkg.exports?.['.']?.node ||
+  !pkg.exports?.['.']?.import ||
+  !pkg.exports?.['.']?.default
+) {
   throw new Error(
-    `'main' property in ${pkgFilePath} must be set to CJS bundle`
+    `\`exports['.'].node/import/default\` properties in ${pkgFilePath} must be set`
   );
 }
 
 if (!pkg.module) {
   throw new Error(
-    `'module' property in ${pkgFilePath} must be set to ESM bundle`
+    `\`module\` property in ${pkgFilePath} must be set to ESM bundle`
   );
 }
 

@@ -1,6 +1,6 @@
 ////// valHashMap validator
 
-import _forEach from 'lodash/forEach';
+import _forEach from 'lodash-es/forEach.js';
 
 import { type, check as isHashMap } from '../validation/isHashMap';
 
