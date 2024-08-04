@@ -1,6 +1,6 @@
 {
   "name": "rtvjs",
-  "version": "5.0.0-beta.0",
+  "version": "5.0.0",
   "description": "Runtime Verification Library for browsers and Node.js.",
   "engines": {
     "node": ">=16.12.0",
