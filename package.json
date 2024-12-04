@@ -106,7 +106,7 @@
     "@rollup/plugin-replace": "^6.0.1",
     "babel-plugin-istanbul": "^7.0.0",
     "chokidar": "^4.0.1",
-    "eslint": "^8.57.0",
+    "eslint": "^9.16.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jest": "^28.9.0",
     "eslint-plugin-jest-dom": "^5.5.0",
