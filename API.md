@@ -1,6 +1,12 @@
 # Objects
 
 <dl>
+<dt><a href="#rtvref">rtvref</a> : <code>object</code></dt>
+<dd><h3>RTV.js Reference</h3>
+
+<p>Members herein are <em>indirectly</em> accessed and/or exposed through the
+ <a href="#rtv">RTV.js Public Interface</a>.</p>
+</dd>
 <dt><a href="#rtv">rtv</a> : <code>object</code></dt>
 <dd><h3>RTV.js Public Interface</h3>
 
@@ -8,268 +14,7 @@
  <a href="#rtvref.impl">implementation</a>, adding a bit of syntactic sugar, and
  adds the <a href="#rtv.config">configuration</a> facilities.</p>
 </dd>
-<dt><a href="#rtvref">rtvref</a> : <code>object</code></dt>
-<dd><h3>RTV.js Reference</h3>
-
-<p>Members herein are <em>indirectly</em> accessed and/or exposed through the
- <a href="#rtv">RTV.js Public Interface</a>.</p>
-</dd>
 </dl>
-
-<a name="rtv"></a>
-
-# rtv : <code>object</code>
-<h3>RTV.js Public Interface</h3>
-
-Provides the externally-facing API. It wraps the
- [implementation](#rtvref.impl), adding a bit of syntactic sugar, and
- adds the [configuration](#rtv.config) facilities.
-
-**Kind**: global namespace  
-
-* [rtv](#rtv) : <code>object</code>
-    * [.types](#rtv.types) : [<code>Enumeration</code>](#rtvref.Enumeration)
-    * [.qualifiers](#rtv.qualifiers) : [<code>Enumeration</code>](#rtvref.Enumeration)
-    * [.version](#rtv.version) : <code>string</code>
-    * [.config](#rtv.config) : <code>object</code>
-        * [.enabled](#rtv.config.enabled) : <code>boolean</code>
-    * [.isTypeset()](#rtv.isTypeset)
-    * [.fullyQualify()](#rtv.fullyQualify)
-    * [.RtvSuccess()](#rtv.RtvSuccess)
-    * [.RtvError()](#rtv.RtvError)
-    * [.check(value, typeset, [options])](#rtv.check) ⇒ [<code>RtvSuccess</code>](#rtvref.RtvSuccess) \| [<code>RtvError</code>](#rtvref.RtvError)
-    * [.verify(value, typeset, [options])](#rtv.verify) ⇒ [<code>RtvSuccess</code>](#rtvref.RtvSuccess)
-
-<a name="rtv.types"></a>
-
-## rtv.types : [<code>Enumeration</code>](#rtvref.Enumeration)
-Enumeration of [types](#rtvref.types.types).
-
-__For convenience, each type is also available directly from this module__,
- e.g. `STRING`, `FINITE`, etc.
-
-The Enumeration can be used to perform additional validations (e.g.
- `types.verify('foo')` would throw because "foo" is not a valid type),
- however whether the type is referenced as `STRING` or `types.STRING`
- makes no difference to typeset validation.
-
-**Kind**: static property of [<code>rtv</code>](#rtv)  
-**Read only**: true  
-<a name="rtv.qualifiers"></a>
-
-## rtv.qualifiers : [<code>Enumeration</code>](#rtvref.Enumeration)
-Enumeration of [qualifiers](#rtvref.qualifiers.qualifiers).
-
-__For convenience, each qualifier is also available directly from this module__,
- e.g. `EXPECTED`, `OPTIONAL`, etc.
-
-The Enumeration can be used to perform additional validations (e.g.
- `qualifiers.verify('x')` would throw because "x" is not a valid qualifier),
- however whether the qualifier is referenced as `EXPECTED` or
- `qualifiers.EXPECTED`` makes no difference to typeset validation.
-
-**Kind**: static property of [<code>rtv</code>](#rtv)  
-**Read only**: true  
-<a name="rtv.version"></a>
-
-## rtv.version : <code>string</code>
-Library version.
-
-**Kind**: static property of [<code>rtv</code>](#rtv)  
-**Read only**: true  
-<a name="rtv.config"></a>
-
-## rtv.config : <code>object</code>
-<h3>RTV.js Configuration</h3>
-
-**Kind**: static namespace of [<code>rtv</code>](#rtv)  
-<a name="rtv.config.enabled"></a>
-
-### config.enabled : <code>boolean</code>
-Globally enables or disables [verify](#rtv.verify) and [check](#rtv.check). When set
- to `false`, these methods are no-ops and always return success.
-
-Use this to enable code optimization when building source with a bundler that supports
- _tree shaking_, like [Rollup](https://rollupjs.org/) or
- [Webpack](https://webpack.js.org/).
-
-The following plugins can redefine the statement `rtv.config.enabled`
- as `false` prior to code optimizations that remove unreachable code:
-
-- Rollup: [rollup-plugin-replace](https://github.com/rollup/rollup-plugin-replace)
-- Webpack: [DefinePlugin](https://webpack.js.org/plugins/define-plugin/)
-
-<h4>Enabled Example: Rollup</h4>
-
-By conditionally calling [verify](#rtv.verify) based on the state of
- [enabled](#rtv.config.enabled), a bundler can be configured to completely
- remove the code from a production build.
-
-Given this module code snippet:
-
-<pre><code>...
-
-if (rtv.config.enabled) {
- rtv.verify(jsonResult, expectedShape);
-}
-
-rtv.config.enabled && rtv.verify(jsonResult, expectedShape); // a bit shorter
-
-...
-</code></pre>
-
-And using this `rollup.config.js` snippet:
-
-<pre><code>const replacePlugin = require('rollup-plugin-replace');
-
-module.exports = {
-  ...
-  plugins: [
-    // invoke this plugin _before_ any other plugins
-    replacePlugin({
-      'rtv.config.enabled': JSON.stringify(false)
-    }),
-    ...
-  ]
-};
-</code></pre>
-
-You could also define your own global to achieve the same result:
-
-<pre><code>...
-DO_TYPE_CHECKS && rtv.verify(...);
-</code></pre>
-
-<pre><code>const replacePlugin = require('rollup-plugin-replace');
-
-module.exports = {
-  ...
-  plugins: [
-    // invoke this plugin _before_ any other plugins
-    replacePlugin({
-      DO_TYPE_CHECKS: JSON.stringify(false)
-    }),
-    ...
-  ]
-};
-</code></pre>
-
-The code in the module snippet above would be completely removed from the
- build's output, thereby removing any rtv.js overhead from production.
-
-If you're using Webpack, be sure to also _not_ explicitly mark the `rtvjs`
- module as an external when disabling RTV.js: Doing so will result in the
- module always being required as an external, even when tree shaking eliminates
- all the code that comes from it.
-
-**Kind**: static property of [<code>config</code>](#rtv.config)  
-**See**
-
-- [check](#rtv.check)
-- [verify](#rtv.verify)
-
-<a name="rtv.isTypeset"></a>
-
-## rtv.isTypeset()
-Determines if a value is a typeset.
-
-**Kind**: static method of [<code>rtv</code>](#rtv)  
-**See**: [isTypeset](#rtvref.validation.isTypeset)  
-<a name="rtv.fullyQualify"></a>
-
-## rtv.fullyQualify()
-Fully-qualifies a given typeset.
-
-**Kind**: static method of [<code>rtv</code>](#rtv)  
-**See**: [fullyQualify](#rtvref.impl.fullyQualify)  
-<a name="rtv.RtvSuccess"></a>
-
-## rtv.RtvSuccess()
-Reference to the [RtvSuccess](#rtvref.RtvSuccess) class/constructor.
-
-This can be used to determine, for example, if the result of [rtv.check()](#rtv.check)
- is the success indicator: `if (result instanceof rtv.RtvSuccess) ...` Note that both
- [RtvSuccess](#rtvref.RtvSuccess) and [RtvError](#rtvref.RtvError) have a
- `valid: boolean` property which you can also use to easily test for success or failure.
-
-**Kind**: static method of [<code>rtv</code>](#rtv)  
-**See**: [RtvSuccess](#rtvref.RtvSuccess)  
-<a name="rtv.RtvError"></a>
-
-## rtv.RtvError()
-Reference to the [RtvError](#rtvref.RtvError) class/constructor.
-
-This is useful if you need to determine whether an `Error` is an `RtvError`
- using the `instanceof` operator: `if (err instanceof rtv.RtvError) ...`
-
-**Kind**: static method of [<code>rtv</code>](#rtv)  
-**See**: [RtvError](#rtvref.RtvError)  
-<a name="rtv.check"></a>
-
-## rtv.check(value, typeset, [options]) ⇒ [<code>RtvSuccess</code>](#rtvref.RtvSuccess) \| [<code>RtvError</code>](#rtvref.RtvError)
-Checks a value against a typeset for compliance.
-
-**Kind**: static method of [<code>rtv</code>](#rtv)  
-**Returns**: [<code>RtvSuccess</code>](#rtvref.RtvSuccess) \| [<code>RtvError</code>](#rtvref.RtvError) - Success indicator if the
- `value` is compliant to the `shape`; `RtvError` if not. __Unlike
- [verify()](#rtv.verify), an exception is not thrown__ if the
- `value` is non-compliant.
-
- Since both [RtvSuccess](#rtvref.RtvSuccess) (returned when
-  the check succeeds) as well as [RtvError](#rtvref.RtvError) (returned
-  when the check fails) have a `valid: boolean` property in common, it's
-  easy to test for success/failure like this:
-  `if (rtv.check(2, rtv.FINITE).valid) {...}`.
-
- __NOTE:__ This method always returns a success indicator if RTV.js is currently
-  [disabled](#rtv.config.enabled).  
-**Throws**:
-
-- <code>Error</code> If `typeset` is not a valid typeset.
-
-**See**
-
-- [verify](#rtv.verify)
-- [enabled](#rtv.config.enabled)
-- [types](#rtvref.types)
-- [shape_descriptor](#rtvref.types.shape_descriptor)
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| value | <code>\*</code> | Value to check. |
-| typeset | [<code>typeset</code>](#rtvref.types.typeset) | Expected shape of (or typeset describing)  the `value`. A shape is a kind of typeset. Normally, this is a  [shape descriptor](#rtvref.types.shape_descriptor). |
-| [options] | [<code>type\_validator\_context\_options</code>](#rtvref.validator.type_validator_context_options) | Configuration options. |
-
-<a name="rtv.verify"></a>
-
-## rtv.verify(value, typeset, [options]) ⇒ [<code>RtvSuccess</code>](#rtvref.RtvSuccess)
-__Requires__ a value to be compliant to a shape.
-
- __NOTE:__ This method always returns a success indicator if RTV.js is currently
-  [disabled](#rtv.config.enabled).
-
-**Kind**: static method of [<code>rtv</code>](#rtv)  
-**Returns**: [<code>RtvSuccess</code>](#rtvref.RtvSuccess) - Success indicator IIF the `value` is compliant
- to the `shape`. Otherwise, an [RtvError](#rtvref.RtvError) __is thrown__.  
-**Throws**:
-
-- [<code>RtvError</code>](#rtvref.RtvError) If the `value` is not compliant to the `shape`.
-- <code>Error</code> If `typeset` is not a valid typeset.
-
-**See**
-
-- [check](#rtv.check)
-- [enabled](#rtv.config.enabled)
-- [types](#rtvref.types)
-- [shape_descriptor](#rtvref.types.shape_descriptor)
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| value | <code>\*</code> | Value to check. |
-| typeset | [<code>typeset</code>](#rtvref.types.typeset) | Expected shape of (or typeset describing)  the `value`. A shape is a kind of typeset. Normally, this is a  [shape descriptor](#rtvref.types.shape_descriptor). |
-| [options] | [<code>type\_validator\_context\_options</code>](#rtvref.validator.type_validator_context_options) | Configuration options. |
 
 <a name="rtvref"></a>
 
@@ -514,6 +259,9 @@ Members herein are _indirectly_ accessed and/or exposed through the
             * [.type](#rtvref.validator.valHashMap.type) : <code>string</code>
             * [.config(settings)](#rtvref.validator.valHashMap.config)
             * [.validate(v, [q], [args], [context])](#rtvref.validator.valHashMap.validate) ⇒ [<code>RtvSuccess</code>](#rtvref.RtvSuccess) \| [<code>RtvError</code>](#rtvref.RtvError)
+        * [.type_validator_context_options](#rtvref.validator.type_validator_context_options) : <code>Object</code>
+        * [.type_validator_context](#rtvref.validator.type_validator_context) : <code>Object</code>
+        * [.validator_config_settings](#rtvref.validator.validator_config_settings) : <code>Object</code>
         * [.valInt](#rtvref.validator.valInt) : <code>Module</code>
             * [.type](#rtvref.validator.valInt.type) : <code>string</code>
             * [.config(settings)](#rtvref.validator.valInt.config)
@@ -574,9 +322,6 @@ Members herein are _indirectly_ accessed and/or exposed through the
             * [.type](#rtvref.validator.valWeakSet.type) : <code>string</code>
             * [.config(settings)](#rtvref.validator.valWeakSet.config)
             * [.validate(v, [q])](#rtvref.validator.valWeakSet.validate) ⇒ [<code>RtvSuccess</code>](#rtvref.RtvSuccess) \| [<code>RtvError</code>](#rtvref.RtvError)
-        * [.type_validator_context_options](#rtvref.validator.type_validator_context_options) : <code>Object</code>
-        * [.type_validator_context](#rtvref.validator.type_validator_context) : <code>Object</code>
-        * [.validator_config_settings](#rtvref.validator.validator_config_settings) : <code>Object</code>
 
 <a name="rtvref.Enumeration"></a>
 
@@ -3855,6 +3600,9 @@ There can only be one validator for any given type. Where possible, each
         * [.type](#rtvref.validator.valHashMap.type) : <code>string</code>
         * [.config(settings)](#rtvref.validator.valHashMap.config)
         * [.validate(v, [q], [args], [context])](#rtvref.validator.valHashMap.validate) ⇒ [<code>RtvSuccess</code>](#rtvref.RtvSuccess) \| [<code>RtvError</code>](#rtvref.RtvError)
+    * [.type_validator_context_options](#rtvref.validator.type_validator_context_options) : <code>Object</code>
+    * [.type_validator_context](#rtvref.validator.type_validator_context) : <code>Object</code>
+    * [.validator_config_settings](#rtvref.validator.validator_config_settings) : <code>Object</code>
     * [.valInt](#rtvref.validator.valInt) : <code>Module</code>
         * [.type](#rtvref.validator.valInt.type) : <code>string</code>
         * [.config(settings)](#rtvref.validator.valInt.config)
@@ -3915,9 +3663,6 @@ There can only be one validator for any given type. Where possible, each
         * [.type](#rtvref.validator.valWeakSet.type) : <code>string</code>
         * [.config(settings)](#rtvref.validator.valWeakSet.config)
         * [.validate(v, [q])](#rtvref.validator.valWeakSet.validate) ⇒ [<code>RtvSuccess</code>](#rtvref.RtvSuccess) \| [<code>RtvError</code>](#rtvref.RtvError)
-    * [.type_validator_context_options](#rtvref.validator.type_validator_context_options) : <code>Object</code>
-    * [.type_validator_context](#rtvref.validator.type_validator_context) : <code>Object</code>
-    * [.validator_config_settings](#rtvref.validator.validator_config_settings) : <code>Object</code>
 
 <a name="rtvref.validator.type_validator"></a>
 
@@ -4455,6 +4200,72 @@ Type: [HASH_MAP](#rtvref.types.HASH_MAP)
 | [q] | <code>string</code> | Validation qualifier. Defaults to  [REQUIRED](#rtvref.qualifiers.REQUIRED). |
 | [args] | [<code>collection\_args</code>](#rtvref.types.collection_args) | Type arguments. |
 | [context] | [<code>type\_validator\_context</code>](#rtvref.validator.type_validator_context) | Validation context. |
+
+<a name="rtvref.validator.type_validator_context_options"></a>
+
+### validator.type\_validator\_context\_options : <code>Object</code>
+<h3>Type Validator Context Options</h3>
+
+General options for configuring the behavior of one or more [validators](#rtvref.validator)
+ invoked during a [check](#rtv.check) or [verification](#rtv.verify) based
+ on the specified [typeset](#rtvref.types.typeset). __All__ validators will
+ receive these options.
+
+Validator-specific _options_ are known as [type arguments](#rtvref.types.type_arguments)
+ and are specified inline within a [typeset](#rtvref.types.typeset).
+
+**Kind**: static typedef of [<code>validator</code>](#rtvref.validator)  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| [exactShapes] | <code>boolean</code> | If `true`, any  [shape](#rtvref.types.shape_descriptor) encountered, top-level or nested,  unless specifically configured not to, will require that the related object's  own-properties be _exactly_ those specified in the shape, no more, no less,  as long as a shape is specified. By default, extra properties on the object  (i.e. not in the shape) being verified are ignored. If a shape isn't specified  on a given object-related typeset, this flag will be ignored for that typeset.  This flag can be overridden on an individual shape basis with the shape's   [exact argument](#rtvref.types.shape_object_args). |
+
+<a name="rtvref.validator.type_validator_context"></a>
+
+### validator.type\_validator\_context : <code>Object</code>
+<h3>Type Validator Context</h3>
+
+This object provides important information to a
+ [type validator](#rtvref.validator.type_validator), including a
+ [custom validator](#rtvref.types.custom_validator), about the context
+ of the current validation check.
+
+For example, a call to `rtv.verify({foo: 1}, {foo: validator})` would provide the
+ following `context` to the invoked `validator`:
+
+<pre><code>{
+  originalValue: {foo: 1},
+  parent: {foo: 1},
+  parentKey: 'foo'
+}
+// and here, the validator's `value` parameter would be set to 1.
+</code></pre>
+
+**Kind**: static typedef of [<code>validator</code>](#rtvref.validator)  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| originalValue | <code>\*</code> | The original/first value given to  [rtv.check()](#rtv.check) or [rtv.verify()](#rtv.verify). |
+| parent | <code>Object</code> \| <code>Array</code> \| <code>Map</code> \| <code>Set</code> \| <code>undefined</code> | Reference to the immediate  parent of the property or element being validated.  For example, if we have this object:  <pre><code>const foods = {    fruits: ['apple', 'orange', 'banana'],    vegetables: ['celery', 'cucumber', 'kale']  }  </code></pre>  and we validate it with the following typeset:  <pre><code>[rtv.HASH_MAP, {    keyExp: '\\w+',    $values: [[rtv.STRING, (value, match, typeset, context) => {      // called for each element of both arrays      value; // 'apple', 'orange', ..., 'cucumber', 'kale'      context.originalValue; // `foods`      context.parent; // first `fruits`, then `vegetables`    }]]  }]  </code></pre>  we see (in the comments) how `originalValue` and `parent` differ. `parent`  gives more immediate context than `originalValue` does since it changes as  the validation digs into the object hierarchy.  `parent` will be `undefined` if the custom validator is placed at the top  top of the typeset since there is no parent to reference in that case.  For example:  <pre><code>[    rtv.HASH_MAP,    {      keyExp: '\\w+',      $values: [[rtv.STRING]]    },    (value, match, typeset, context) => {      // called once for the hash map itself      value; // `foods`      context.originalValue; // `foods`      context.parent; // `undefined`    }  ]  </code></pre> |
+| parentKey | <code>\*</code> | Reference to the key/index in the `parent` that is  being validated. The associated value is provided as the first parameter  to the [custom validator](#rtvref.types.custom_validator).  `parentKey` differs depending on the type of `parent`:  - `Set`: `undefined` since Sets do not have indexes. Use the `value`    parameter provided to the    [custom validator](#rtvref.types.custom_validator) as the key into the    `parent` in this case.  - `Map`: When validating __keys__, always `undefined`. Use the `value` parameter    provided to the [custom validator](#rtvref.types.custom_validator) to    know which key is being validated. When validating __values__, `parentKey`    will be any value that is a valid key in a `Map`.  - `Object` (i.e. [HASH_MAP](#rtvref.types.HASH_MAP)): `string`, the key name.  - `Array`: `number`, the element's index.  - `undefined`: `undefined`. |
+| [options] | [<code>type\_validator\_context\_options</code>](#rtvref.validator.type_validator_context_options) | Configuration options. |
+
+<a name="rtvref.validator.validator_config_settings"></a>
+
+### validator.validator\_config\_settings : <code>Object</code>
+<h3>Type Validator Configuration Settings</h3>
+
+The settings provided to the
+ [configuration function](#rtvref.validator.validator_config).
+
+**Kind**: static typedef of [<code>validator</code>](#rtvref.validator)  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| impl | [<code>impl</code>](#rtvref.impl) | Reference to the `impl` module. |
 
 <a name="rtvref.validator.valInt"></a>
 
@@ -5130,69 +4941,258 @@ Type: [WEAK_SET](#rtvref.types.WEAK_SET)
 | v | <code>\*</code> | Value to validate. |
 | [q] | <code>string</code> | Validation qualifier. Defaults to  [REQUIRED](#rtvref.qualifiers.REQUIRED). |
 
-<a name="rtvref.validator.type_validator_context_options"></a>
+<a name="rtv"></a>
 
-### validator.type\_validator\_context\_options : <code>Object</code>
-<h3>Type Validator Context Options</h3>
+# rtv : <code>object</code>
+<h3>RTV.js Public Interface</h3>
 
-General options for configuring the behavior of one or more [validators](#rtvref.validator)
- invoked during a [check](#rtv.check) or [verification](#rtv.verify) based
- on the specified [typeset](#rtvref.types.typeset). __All__ validators will
- receive these options.
+Provides the externally-facing API. It wraps the
+ [implementation](#rtvref.impl), adding a bit of syntactic sugar, and
+ adds the [configuration](#rtv.config) facilities.
 
-Validator-specific _options_ are known as [type arguments](#rtvref.types.type_arguments)
- and are specified inline within a [typeset](#rtvref.types.typeset).
+**Kind**: global namespace  
 
-**Kind**: static typedef of [<code>validator</code>](#rtvref.validator)  
-**Properties**
+* [rtv](#rtv) : <code>object</code>
+    * [.types](#rtv.types) : [<code>Enumeration</code>](#rtvref.Enumeration)
+    * [.qualifiers](#rtv.qualifiers) : [<code>Enumeration</code>](#rtvref.Enumeration)
+    * [.version](#rtv.version) : <code>string</code>
+    * [.config](#rtv.config) : <code>object</code>
+        * [.enabled](#rtv.config.enabled) : <code>boolean</code>
+    * [.isTypeset()](#rtv.isTypeset)
+    * [.fullyQualify()](#rtv.fullyQualify)
+    * [.RtvSuccess()](#rtv.RtvSuccess)
+    * [.RtvError()](#rtv.RtvError)
+    * [.check(value, typeset, [options])](#rtv.check) ⇒ [<code>RtvSuccess</code>](#rtvref.RtvSuccess) \| [<code>RtvError</code>](#rtvref.RtvError)
+    * [.verify(value, typeset, [options])](#rtv.verify) ⇒ [<code>RtvSuccess</code>](#rtvref.RtvSuccess)
 
-| Name | Type | Description |
-| --- | --- | --- |
-| [exactShapes] | <code>boolean</code> | If `true`, any  [shape](#rtvref.types.shape_descriptor) encountered, top-level or nested,  unless specifically configured not to, will require that the related object's  own-properties be _exactly_ those specified in the shape, no more, no less,  as long as a shape is specified. By default, extra properties on the object  (i.e. not in the shape) being verified are ignored. If a shape isn't specified  on a given object-related typeset, this flag will be ignored for that typeset.  This flag can be overridden on an individual shape basis with the shape's   [exact argument](#rtvref.types.shape_object_args). |
+<a name="rtv.types"></a>
 
-<a name="rtvref.validator.type_validator_context"></a>
+## rtv.types : [<code>Enumeration</code>](#rtvref.Enumeration)
+Enumeration of [types](#rtvref.types.types).
 
-### validator.type\_validator\_context : <code>Object</code>
-<h3>Type Validator Context</h3>
+__For convenience, each type is also available directly from this module__,
+ e.g. `STRING`, `FINITE`, etc.
 
-This object provides important information to a
- [type validator](#rtvref.validator.type_validator), including a
- [custom validator](#rtvref.types.custom_validator), about the context
- of the current validation check.
+The Enumeration can be used to perform additional validations (e.g.
+ `types.verify('foo')` would throw because "foo" is not a valid type),
+ however whether the type is referenced as `STRING` or `types.STRING`
+ makes no difference to typeset validation.
 
-For example, a call to `rtv.verify({foo: 1}, {foo: validator})` would provide the
- following `context` to the invoked `validator`:
+**Kind**: static property of [<code>rtv</code>](#rtv)  
+**Read only**: true  
+<a name="rtv.qualifiers"></a>
 
-<pre><code>{
-  originalValue: {foo: 1},
-  parent: {foo: 1},
-  parentKey: 'foo'
+## rtv.qualifiers : [<code>Enumeration</code>](#rtvref.Enumeration)
+Enumeration of [qualifiers](#rtvref.qualifiers.qualifiers).
+
+__For convenience, each qualifier is also available directly from this module__,
+ e.g. `EXPECTED`, `OPTIONAL`, etc.
+
+The Enumeration can be used to perform additional validations (e.g.
+ `qualifiers.verify('x')` would throw because "x" is not a valid qualifier),
+ however whether the qualifier is referenced as `EXPECTED` or
+ `qualifiers.EXPECTED`` makes no difference to typeset validation.
+
+**Kind**: static property of [<code>rtv</code>](#rtv)  
+**Read only**: true  
+<a name="rtv.version"></a>
+
+## rtv.version : <code>string</code>
+Library version.
+
+**Kind**: static property of [<code>rtv</code>](#rtv)  
+**Read only**: true  
+<a name="rtv.config"></a>
+
+## rtv.config : <code>object</code>
+<h3>RTV.js Configuration</h3>
+
+**Kind**: static namespace of [<code>rtv</code>](#rtv)  
+<a name="rtv.config.enabled"></a>
+
+### config.enabled : <code>boolean</code>
+Globally enables or disables [verify](#rtv.verify) and [check](#rtv.check). When set
+ to `false`, these methods are no-ops and always return success.
+
+Use this to enable code optimization when building source with a bundler that supports
+ _tree shaking_, like [Rollup](https://rollupjs.org/) or
+ [Webpack](https://webpack.js.org/).
+
+The following plugins can redefine the statement `rtv.config.enabled`
+ as `false` prior to code optimizations that remove unreachable code:
+
+- Rollup: [rollup-plugin-replace](https://github.com/rollup/rollup-plugin-replace)
+- Webpack: [DefinePlugin](https://webpack.js.org/plugins/define-plugin/)
+
+<h4>Enabled Example: Rollup</h4>
+
+By conditionally calling [verify](#rtv.verify) based on the state of
+ [enabled](#rtv.config.enabled), a bundler can be configured to completely
+ remove the code from a production build.
+
+Given this module code snippet:
+
+<pre><code>...
+
+if (rtv.config.enabled) {
+ rtv.verify(jsonResult, expectedShape);
 }
-// and here, the validator's `value` parameter would be set to 1.
+
+rtv.config.enabled && rtv.verify(jsonResult, expectedShape); // a bit shorter
+
+...
 </code></pre>
 
-**Kind**: static typedef of [<code>validator</code>](#rtvref.validator)  
-**Properties**
+And using this `rollup.config.js` snippet:
 
-| Name | Type | Description |
+<pre><code>const replacePlugin = require('rollup-plugin-replace');
+
+module.exports = {
+  ...
+  plugins: [
+    // invoke this plugin _before_ any other plugins
+    replacePlugin({
+      'rtv.config.enabled': JSON.stringify(false)
+    }),
+    ...
+  ]
+};
+</code></pre>
+
+You could also define your own global to achieve the same result:
+
+<pre><code>...
+DO_TYPE_CHECKS && rtv.verify(...);
+</code></pre>
+
+<pre><code>const replacePlugin = require('rollup-plugin-replace');
+
+module.exports = {
+  ...
+  plugins: [
+    // invoke this plugin _before_ any other plugins
+    replacePlugin({
+      DO_TYPE_CHECKS: JSON.stringify(false)
+    }),
+    ...
+  ]
+};
+</code></pre>
+
+The code in the module snippet above would be completely removed from the
+ build's output, thereby removing any rtv.js overhead from production.
+
+If you're using Webpack, be sure to also _not_ explicitly mark the `rtvjs`
+ module as an external when disabling RTV.js: Doing so will result in the
+ module always being required as an external, even when tree shaking eliminates
+ all the code that comes from it.
+
+**Kind**: static property of [<code>config</code>](#rtv.config)  
+**See**
+
+- [check](#rtv.check)
+- [verify](#rtv.verify)
+
+<a name="rtv.isTypeset"></a>
+
+## rtv.isTypeset()
+Determines if a value is a typeset.
+
+**Kind**: static method of [<code>rtv</code>](#rtv)  
+**See**: [isTypeset](#rtvref.validation.isTypeset)  
+<a name="rtv.fullyQualify"></a>
+
+## rtv.fullyQualify()
+Fully-qualifies a given typeset.
+
+**Kind**: static method of [<code>rtv</code>](#rtv)  
+**See**: [fullyQualify](#rtvref.impl.fullyQualify)  
+<a name="rtv.RtvSuccess"></a>
+
+## rtv.RtvSuccess()
+Reference to the [RtvSuccess](#rtvref.RtvSuccess) class/constructor.
+
+This can be used to determine, for example, if the result of [rtv.check()](#rtv.check)
+ is the success indicator: `if (result instanceof rtv.RtvSuccess) ...` Note that both
+ [RtvSuccess](#rtvref.RtvSuccess) and [RtvError](#rtvref.RtvError) have a
+ `valid: boolean` property which you can also use to easily test for success or failure.
+
+**Kind**: static method of [<code>rtv</code>](#rtv)  
+**See**: [RtvSuccess](#rtvref.RtvSuccess)  
+<a name="rtv.RtvError"></a>
+
+## rtv.RtvError()
+Reference to the [RtvError](#rtvref.RtvError) class/constructor.
+
+This is useful if you need to determine whether an `Error` is an `RtvError`
+ using the `instanceof` operator: `if (err instanceof rtv.RtvError) ...`
+
+**Kind**: static method of [<code>rtv</code>](#rtv)  
+**See**: [RtvError](#rtvref.RtvError)  
+<a name="rtv.check"></a>
+
+## rtv.check(value, typeset, [options]) ⇒ [<code>RtvSuccess</code>](#rtvref.RtvSuccess) \| [<code>RtvError</code>](#rtvref.RtvError)
+Checks a value against a typeset for compliance.
+
+**Kind**: static method of [<code>rtv</code>](#rtv)  
+**Returns**: [<code>RtvSuccess</code>](#rtvref.RtvSuccess) \| [<code>RtvError</code>](#rtvref.RtvError) - Success indicator if the
+ `value` is compliant to the `shape`; `RtvError` if not. __Unlike
+ [verify()](#rtv.verify), an exception is not thrown__ if the
+ `value` is non-compliant.
+
+ Since both [RtvSuccess](#rtvref.RtvSuccess) (returned when
+  the check succeeds) as well as [RtvError](#rtvref.RtvError) (returned
+  when the check fails) have a `valid: boolean` property in common, it's
+  easy to test for success/failure like this:
+  `if (rtv.check(2, rtv.FINITE).valid) {...}`.
+
+ __NOTE:__ This method always returns a success indicator if RTV.js is currently
+  [disabled](#rtv.config.enabled).  
+**Throws**:
+
+- <code>Error</code> If `typeset` is not a valid typeset.
+
+**See**
+
+- [verify](#rtv.verify)
+- [enabled](#rtv.config.enabled)
+- [types](#rtvref.types)
+- [shape_descriptor](#rtvref.types.shape_descriptor)
+
+
+| Param | Type | Description |
 | --- | --- | --- |
-| originalValue | <code>\*</code> | The original/first value given to  [rtv.check()](#rtv.check) or [rtv.verify()](#rtv.verify). |
-| parent | <code>Object</code> \| <code>Array</code> \| <code>Map</code> \| <code>Set</code> \| <code>undefined</code> | Reference to the immediate  parent of the property or element being validated.  For example, if we have this object:  <pre><code>const foods = {    fruits: ['apple', 'orange', 'banana'],    vegetables: ['celery', 'cucumber', 'kale']  }  </code></pre>  and we validate it with the following typeset:  <pre><code>[rtv.HASH_MAP, {    keyExp: '\\w+',    $values: [[rtv.STRING, (value, match, typeset, context) => {      // called for each element of both arrays      value; // 'apple', 'orange', ..., 'cucumber', 'kale'      context.originalValue; // `foods`      context.parent; // first `fruits`, then `vegetables`    }]]  }]  </code></pre>  we see (in the comments) how `originalValue` and `parent` differ. `parent`  gives more immediate context than `originalValue` does since it changes as  the validation digs into the object hierarchy.  `parent` will be `undefined` if the custom validator is placed at the top  top of the typeset since there is no parent to reference in that case.  For example:  <pre><code>[    rtv.HASH_MAP,    {      keyExp: '\\w+',      $values: [[rtv.STRING]]    },    (value, match, typeset, context) => {      // called once for the hash map itself      value; // `foods`      context.originalValue; // `foods`      context.parent; // `undefined`    }  ]  </code></pre> |
-| parentKey | <code>\*</code> | Reference to the key/index in the `parent` that is  being validated. The associated value is provided as the first parameter  to the [custom validator](#rtvref.types.custom_validator).  `parentKey` differs depending on the type of `parent`:  - `Set`: `undefined` since Sets do not have indexes. Use the `value`    parameter provided to the    [custom validator](#rtvref.types.custom_validator) as the key into the    `parent` in this case.  - `Map`: When validating __keys__, always `undefined`. Use the `value` parameter    provided to the [custom validator](#rtvref.types.custom_validator) to    know which key is being validated. When validating __values__, `parentKey`    will be any value that is a valid key in a `Map`.  - `Object` (i.e. [HASH_MAP](#rtvref.types.HASH_MAP)): `string`, the key name.  - `Array`: `number`, the element's index.  - `undefined`: `undefined`. |
+| value | <code>\*</code> | Value to check. |
+| typeset | [<code>typeset</code>](#rtvref.types.typeset) | Expected shape of (or typeset describing)  the `value`. A shape is a kind of typeset. Normally, this is a  [shape descriptor](#rtvref.types.shape_descriptor). |
 | [options] | [<code>type\_validator\_context\_options</code>](#rtvref.validator.type_validator_context_options) | Configuration options. |
 
-<a name="rtvref.validator.validator_config_settings"></a>
+<a name="rtv.verify"></a>
 
-### validator.validator\_config\_settings : <code>Object</code>
-<h3>Type Validator Configuration Settings</h3>
+## rtv.verify(value, typeset, [options]) ⇒ [<code>RtvSuccess</code>](#rtvref.RtvSuccess)
+__Requires__ a value to be compliant to a shape.
 
-The settings provided to the
- [configuration function](#rtvref.validator.validator_config).
+ __NOTE:__ This method always returns a success indicator if RTV.js is currently
+  [disabled](#rtv.config.enabled).
 
-**Kind**: static typedef of [<code>validator</code>](#rtvref.validator)  
-**Properties**
+**Kind**: static method of [<code>rtv</code>](#rtv)  
+**Returns**: [<code>RtvSuccess</code>](#rtvref.RtvSuccess) - Success indicator IIF the `value` is compliant
+ to the `shape`. Otherwise, an [RtvError](#rtvref.RtvError) __is thrown__.  
+**Throws**:
 
-| Name | Type | Description |
+- [<code>RtvError</code>](#rtvref.RtvError) If the `value` is not compliant to the `shape`.
+- <code>Error</code> If `typeset` is not a valid typeset.
+
+**See**
+
+- [check](#rtv.check)
+- [enabled](#rtv.config.enabled)
+- [types](#rtvref.types)
+- [shape_descriptor](#rtvref.types.shape_descriptor)
+
+
+| Param | Type | Description |
 | --- | --- | --- |
-| impl | [<code>impl</code>](#rtvref.impl) | Reference to the `impl` module. |
+| value | <code>\*</code> | Value to check. |
+| typeset | [<code>typeset</code>](#rtvref.types.typeset) | Expected shape of (or typeset describing)  the `value`. A shape is a kind of typeset. Normally, this is a  [shape descriptor](#rtvref.types.shape_descriptor). |
+| [options] | [<code>type\_validator\_context\_options</code>](#rtvref.validator.type_validator_context_options) | Configuration options. |
 

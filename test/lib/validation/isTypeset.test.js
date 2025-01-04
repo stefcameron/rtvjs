@@ -229,7 +229,6 @@ describe('module: lib/validation/isTypeset', () => {
       });
 
       // eslint is being ridiculous about the indent here, maybe it's a bug?
-      /* eslint-disable indent */
       it(
         'should indicate type args in failure message if failure at index >1 or index 1 ' +
           'without qualifier',
@@ -247,7 +246,6 @@ describe('module: lib/validation/isTypeset', () => {
           );
         }
       );
-      /* eslint-enable indent */
     });
 
     describe('deep', () => {
@@ -323,7 +321,7 @@ describe('module: lib/validation/isTypeset', () => {
                 },
               ],
             },
-          ], // eslint-disable-line object-curly-spacing
+          ],
 
           // for class object, we should be going deep into the shape property of
           //  the args object and finding the invalid typeset

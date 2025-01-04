@@ -56,9 +56,7 @@ const mkConfig = function () {
       // match any file with a suffix of .test, or .spec; and with .js or .jsx
       //  extension; and just test.<ext> or spec.<ext>; as long as the file is inside
       //  a __test__ directory at any depth within the base path
-      `${path.resolve(
-        __dirname
-      )}/test/**/?(*.)+(spec|test).{js,jsx}`,
+      `${path.resolve(__dirname)}/test/**/?(*.)+(spec|test).{js,jsx}`,
     ],
 
     // NOTE: to truly ignore paths, we have to ignore them both for tests and

@@ -42,7 +42,7 @@ const deepVerifyShape = function (
         return; // ignore unspecified property typesets
       }
       const opts = Object.assign({}, options); // options.rootCause should not exist at this point
-      valid = isTypeset(ts, opts); // eslint-disable-line no-use-before-define
+      valid = isTypeset(ts, opts);
       options.rootCause =
         opts.rootCause &&
         `${failurePrefix} (${
@@ -76,7 +76,7 @@ const deepVerifyShape = function (
 // @param {number} [idx] The position of `typeset` within the parent Array typeset.
 const deepVerifyArray = function (typeset, options, failurePrefix, idx) {
   const opts = Object.assign({}, options); // options.rootCause should not exist at this point
-  const valid = isTypeset(typeset, opts); // eslint-disable-line no-use-before-define
+  const valid = isTypeset(typeset, opts);
   options.rootCause =
     opts.rootCause && `${failurePrefix} (index=${idx}): ${opts.rootCause}`;
   return valid;

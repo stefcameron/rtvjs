@@ -780,7 +780,6 @@ describe('module: lib/impl', () => {
         });
       }).toThrow(msg);
       expect(function () {
-        // eslint-disable-next-line no-new-wrappers
         impl._validateContext({
           originalValue: 1,
           // eslint-disable-next-line no-new-wrappers

@@ -1,7 +1,5 @@
 ////// Manual Node.js testing of rtv internals
 
-/* eslint-disable node/no-unsupported-features/es-syntax */
-
 import * as rtv from '../src/rtv';
 import * as impl from '../src/lib/impl';
 import * as types from '../src/lib/types';

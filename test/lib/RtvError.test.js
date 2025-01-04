@@ -224,7 +224,6 @@ describe('module: lib/RtvError', () => {
     expect(err.message).not.toContain(' value=');
   });
 
-  // eslint-disable-next-line max-len
   it('should have a message including the value, path, mismatch, and rootCause message', () => {
     const value = null;
     const typeset = [types.STRING];
@@ -258,7 +257,6 @@ describe('module: lib/RtvError', () => {
     expect(err.message).toContain(' path="/"');
   });
 
-  // eslint-disable-next-line max-len
   it('should provide readonly valid, value, typeset, path, mismatch, rootCause properties', () => {
     const value = { the: { path: 123 } };
     const typeset = [types.STRING];
