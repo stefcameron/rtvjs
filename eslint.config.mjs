@@ -324,6 +324,16 @@ export default [
   // Test Configs
   createTestConfig(),
 
+  // this file specifically depends on a built file which may not exist yet, so it needs an
+  //  eslint-disable directive which, if the file does exist, will get flagged as an unused
+  //  eslint-disable directive, so turn this warning off
+  {
+    files: ['tools/node.mjs'],
+    linterOptions: {
+      reportUnusedDisableDirectives: 'off',
+    },
+  },
+
   // Prettier
   // ALWAYS LAST: disable style rules that conflict with prettier
   // @see https://typescript-eslint.io/troubleshooting/formatting#suggested-usage---prettier
