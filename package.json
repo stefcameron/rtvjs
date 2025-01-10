@@ -3,7 +3,8 @@
   "version": "5.0.0",
   "description": "Runtime Verification Library for browsers and Node.js.",
   "engines": {
-    "node": "^20.11.0 || >=21.2.0"
+    "node": ">=16.12.0",
+    "npm": ">=10.0.0"
   },
   "module": "dist/browser/rtv.esm.slim.js",
   "exports": {
