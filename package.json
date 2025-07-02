@@ -93,7 +93,7 @@
     "lodash-es": "^4.17.21"
   },
   "devDependencies": {
-    "@babel/core": "^7.27.4",
+    "@babel/core": "^7.27.7",
     "@babel/eslint-parser": "^7.27.5",
     "@babel/eslint-plugin": "^7.27.1",
     "@babel/plugin-transform-runtime": "^7.27.4",
