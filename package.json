@@ -116,7 +116,7 @@
     "eslint-plugin-jest-dom": "^5.5.0",
     "globals": "^16.3.0",
     "husky": "^9.1.7",
-    "jest": "^30.0.3",
+    "jest": "^30.0.4",
     "jest-environment-jsdom": "^30.0.4",
     "jest-transform-stub": "^2.0.0",
     "jsdoc-to-markdown": "^9.1.1",
