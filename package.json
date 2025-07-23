@@ -119,7 +119,7 @@
     "jest": "^30.0.4",
     "jest-environment-jsdom": "^30.0.4",
     "jest-transform-stub": "^2.0.0",
-    "jsdoc-to-markdown": "^9.1.1",
+    "jsdoc-to-markdown": "^9.1.2",
     "live-server": "^1.2.2",
     "lodash-es": "^4.17.21",
     "prettier": "^3.6.2",
