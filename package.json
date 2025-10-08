@@ -100,7 +100,7 @@
     "@babel/preset-env": "^7.28.3",
     "@babel/register": "^7.28.3",
     "@babel/runtime": "^7.28.4",
-    "@eslint/js": "^9.36.0",
+    "@eslint/js": "^9.37.0",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^28.0.6",
     "@rollup/plugin-json": "^6.1.0",
