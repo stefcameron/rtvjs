@@ -22,7 +22,7 @@ describe('module: rtv', () => {
     it('should provide all enumerable "types" enum props', () => {
       expect(
         Object.keys(types).every(function (key) {
-          // eslint-disable-next-line import/namespace
+          // eslint-disable-next-line import-x/namespace
           return rtv[key] === types[key];
         })
       ).toBe(true);
@@ -41,7 +41,7 @@ describe('module: rtv', () => {
     it('should provide all enumerable "qualifiers" enum props', () => {
       expect(
         Object.keys(qualifiers).every(function (key) {
-          // eslint-disable-next-line import/namespace
+          // eslint-disable-next-line import-x/namespace
           return rtv[key] === qualifiers[key];
         })
       ).toBe(true);

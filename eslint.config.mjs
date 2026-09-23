@@ -2,14 +2,12 @@
 // ROOT ESLint Configuration
 //
 
-/* eslint-env node */
-
 import js from '@eslint/js';
 import globals from 'globals';
-import babel from '@babel/eslint-plugin';
-import babelParser from '@babel/eslint-parser';
 import prettier from 'eslint-config-prettier';
-import importPlugin from 'eslint-plugin-import';
+import importPlugin, {
+  flatConfigs as importFlatConfigs,
+} from 'eslint-plugin-import-x';
 import jest from 'eslint-plugin-jest';
 import jestDom from 'eslint-plugin-jest-dom';
 
@@ -21,12 +19,10 @@ const impliedStrict = true;
 //
 
 // Plugins that apply to ALL envs
-const basePlugins = {
-  '@babel': babel, // @see https://www.npmjs.com/package/@babel/eslint-plugin
-};
+const basePlugins = {};
 
 const importPluginSettings = {
-  'import/resolver': {
+  'import-x/resolver': {
     node: {
       extensions: [
         '.js',
@@ -203,11 +199,10 @@ const createToolingConfig = (isModule = true) => ({
   ignores: ['src/**/*.*', 'test/**/*.*', 'docs/**/*.*'],
   plugins: {
     ...basePlugins,
-    ...(isModule ? { import: importPlugin } : {}),
+    ...(isModule ? { 'import-x': importPlugin } : {}),
   },
   languageOptions: {
     ecmaVersion,
-    parser: babelParser,
     parserOptions: {
       sourceType: isModule ? 'module' : 'script',
       ecmaFeatures: {
@@ -226,7 +221,7 @@ const createToolingConfig = (isModule = true) => ({
   rules: {
     ...baseRules,
     ...toolingRules,
-    ...(isModule ? importPlugin.flatConfigs.recommended.rules : {}), // BEFORE TypeScript rules
+    ...(isModule ? importFlatConfigs.recommended.rules : {}), // BEFORE TypeScript rules
   },
 });
 
@@ -238,11 +233,10 @@ const createSourceJSConfig = () => ({
   files: ['src/**/*.js'],
   plugins: {
     ...basePlugins,
-    import: importPlugin,
+    'import-x': importPlugin,
   },
   languageOptions: {
     ecmaVersion,
-    parser: babelParser,
     parserOptions: {
       sourceType: 'module',
       ecmaFeatures: {
@@ -261,7 +255,7 @@ const createSourceJSConfig = () => ({
   },
   rules: {
     ...baseRules,
-    ...importPlugin.flatConfigs.recommended.rules,
+    ...importFlatConfigs.recommended.rules,
   },
 });
 
@@ -269,13 +263,12 @@ const createTestConfig = () => ({
   files: ['test/**/*.js'],
   plugins: {
     ...basePlugins,
-    import: importPlugin,
+    'import-x': importPlugin,
     jest,
     'jest-dom': jestDom,
   },
   languageOptions: {
     ecmaVersion,
-    parser: babelParser,
     parserOptions: {
       sourceType: 'module',
       ecmaFeatures: {
@@ -295,7 +288,7 @@ const createTestConfig = () => ({
   },
   rules: {
     ...baseRules,
-    ...importPlugin.flatConfigs.recommended.rules, // BEFORE TypeScript rules
+    ...importFlatConfigs.recommended.rules, // BEFORE TypeScript rules
     ...testRules,
   },
 });

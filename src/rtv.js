@@ -353,7 +353,7 @@ export const verify = function (value, typeset, options) {
   const publicImpl = Object.keys(impl)
     .filter((k) => k.indexOf('_') < 0)
     .reduce((obj, k) => {
-      // eslint-disable-next-line import/namespace
+      // eslint-disable-next-line import-x/namespace
       obj[k] = impl[k];
       return obj;
     }, {});

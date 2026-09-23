@@ -5,7 +5,7 @@ const { nodeResolve: resolvePlugin } = require('@rollup/plugin-node-resolve');
 const cjsPlugin = require('@rollup/plugin-commonjs');
 const { default: babelPlugin } = require('@rollup/plugin-babel');
 const replacePlugin = require('@rollup/plugin-replace');
-const { terser: terserPlugin } = require('rollup-plugin-terser');
+const terserPlugin = require('@rollup/plugin-terser');
 
 const {
   RU_FORMAT_CJS,
